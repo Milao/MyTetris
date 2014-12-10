@@ -4,19 +4,39 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity" >
 
-    <TextView
-        android:id="@+id/textView1"
+    <Button
+        android:id="@+id/setting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_alignLeft="@+id/start"
+        android:layout_centerVertical="true"
+        android:text="Button" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/rank"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
+        android:layout_alignLeft="@+id/setting"
+        android:layout_below="@+id/setting"
+        android:layout_marginTop="22dp"
+        android:text="Button" />
+
+    <Button
+        android:id="@+id/help"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/rank"
+        android:layout_below="@+id/rank"
+        android:layout_marginTop="20dp"
+        android:text="Button" />
+
+    <Button
+        android:id="@+id/start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/setting"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="108dp"
+        android:layout_marginBottom="22dp"
         android:text="Button" />
 
 </RelativeLayout>
