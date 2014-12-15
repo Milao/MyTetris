@@ -2,17 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity" >
-
-    <Button
-        android:id="@+id/setting"
-        android:onClick="setting_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/start"
-        android:layout_centerVertical="true"
-        android:text="Button" 
-        android:background="@drawable/btn_background"/>
+    tools:context=".MainActivity" 
+    android:background="@drawable/background">
 
     <Button
         android:id="@+id/rank"
@@ -42,6 +33,18 @@
         android:layout_above="@+id/setting"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="22dp"
+        android:text="Button" />
+
+    <Button
+        android:id="@+id/setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="17dp"
+        android:layout_marginTop="87dp"
+        android:background="@drawable/btn_background"
+        android:onClick="setting_btn"
         android:text="Button" />
 
 </RelativeLayout>
