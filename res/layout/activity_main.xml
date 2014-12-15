@@ -6,6 +6,7 @@
 
     <Button
         android:id="@+id/setting"
+        android:onClick="setting_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/start"
@@ -14,6 +15,7 @@
 
     <Button
         android:id="@+id/rank"
+        android:onClick="rank_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/setting"
@@ -23,6 +25,7 @@
 
     <Button
         android:id="@+id/help"
+        android:onClick="help_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/rank"
@@ -32,6 +35,7 @@
 
     <Button
         android:id="@+id/start"
+        android:onClick="start_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/setting"
