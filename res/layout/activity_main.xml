@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/start"
         android:layout_centerVertical="true"
-        android:text="Button" />
+        android:text="Button" 
+        android:background="@drawable/btn_background"/>
 
     <Button
         android:id="@+id/rank"
