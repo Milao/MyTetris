@@ -6,45 +6,44 @@
     android:background="@drawable/background">
 
     <Button
-        android:id="@+id/rank"
-        android:onClick="rank_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/setting"
-        android:layout_below="@+id/setting"
-        android:layout_marginTop="22dp"
-        android:text="Button" />
-
-    <Button
         android:id="@+id/help"
-        android:onClick="help_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="90dp"
+        android:layout_height="54dp"
         android:layout_alignLeft="@+id/rank"
         android:layout_below="@+id/rank"
         android:layout_marginTop="20dp"
-        android:text="Button" />
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/btn_normal_help"
+        android:onClick="help_btn" />
 
     <Button
         android:id="@+id/start"
-        android:onClick="start_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/setting"
+        android:layout_width="90dp"
+        android:layout_height="54dp"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="22dp"
-        android:text="Button" />
+        android:layout_marginTop="184dp"
+        android:background="@drawable/btn_normal_start"
+        android:onClick="start_btn" />
 
     <Button
         android:id="@+id/setting"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="17dp"
-        android:layout_marginTop="87dp"
-        android:background="@drawable/btn_background"
-        android:onClick="setting_btn"
-        android:text="Button" />
+        android:layout_width="90dp"
+        android:layout_height="54dp"
+        android:layout_alignLeft="@+id/start"
+        android:layout_below="@+id/start"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/btn_normal_setting"
+        android:onClick="setting_btn" />
+
+    <Button
+        android:id="@+id/rank"
+        android:layout_width="90dp"
+        android:layout_height="54dp"
+        android:layout_alignLeft="@+id/setting"
+        android:layout_below="@+id/setting"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/btn_normal_rank"
+        android:onClick="rank_btn" />
 
 </RelativeLayout>
