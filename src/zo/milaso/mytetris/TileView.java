@@ -24,6 +24,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.WindowManager;
 
 /**
  * TileView: a View-variant designed for handling arrays of "icons" or other drawables.
@@ -42,8 +43,8 @@ public class TileView extends View {
     protected static int mXTileCount =12;
     protected static int mYTileCount = 20;
 
-    private static int mXOffset;
-    private static int mYOffset;
+    protected static int mXOffset;
+    protected static int mYOffset;
 
     private final Paint mPaint = new Paint();
 
@@ -61,11 +62,30 @@ public class TileView extends View {
 
     public TileView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        WindowManager wm = (WindowManager) getContext()
+                .getSystemService(Context.WINDOW_SERVICE);
+
+        int w = wm.getDefaultDisplay().getWidth();
+        int h = wm.getDefaultDisplay().getHeight();
+        mTileSize = (int)(w/3*2/mXTileCount);
+
+        mXOffset = 0;
+        mYOffset = (h - (mTileSize * mYTileCount) );
+        mTileGrid = new int[mXTileCount][mYTileCount];
     }
 
     public TileView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        WindowManager wm = (WindowManager) getContext()
+                .getSystemService(Context.WINDOW_SERVICE);
 
+        int w = wm.getDefaultDisplay().getWidth();
+        int h = wm.getDefaultDisplay().getHeight();
+        mTileSize = (int)(w/3*2/mXTileCount);
+
+        mXOffset = 0;
+        mYOffset = 0;
+        mTileGrid = new int[mXTileCount][mYTileCount];
     }
 
     /**
