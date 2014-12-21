@@ -22,10 +22,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-   		 <activity android:name=".Game"> </activity>
-		<activity android:name=".help"> </activity>
-		<activity android:name=".rank"> </activity>
-		<activity android:name=".setting"> </activity>
+   		 <activity android:name=".Game"  android:screenOrientation="nosensor" > </activity>
+		<activity android:name=".help"  android:screenOrientation="nosensor" > </activity>
+		<activity android:name=".rank"  android:screenOrientation="nosensor" > </activity>
+		<activity android:name=".setting"  android:screenOrientation="nosensor" > </activity>
     </application>
 
 </manifest>
