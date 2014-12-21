@@ -5,14 +5,14 @@ import android.os.Bundle;
 
 public class Game extends Activity {
 	
+	private tetrisview mtetrisview;
+	
 	public void onCreate(Bundle saved){
 		super.onCreate(saved);
-		tetrisview tetris =new tetrisview(this);
-		setContentView(tetris);
+		setContentView(R.layout.tetris_layout);
+		mtetrisview = (tetrisview)findViewById(R.id.tetris);
+		mtetrisview.ininewgame();
+		mtetrisview.setMode(tetrisview.RUNNING);
 	}
-	/*public void onDestroy(){
-		super.onDestroy();
-		tetris.surfaceDestroyed(null);
-	}*/
 
 }
