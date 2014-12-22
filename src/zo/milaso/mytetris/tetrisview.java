@@ -3,11 +3,18 @@ package zo.milaso.mytetris;
 
 import java.util.Random;
 
+import android.R.color;
+import android.R.integer;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.view.WindowManager;
 
 public class tetrisview extends TileView {
 	public int Screen_width;
@@ -19,18 +26,17 @@ public class tetrisview extends TileView {
     public static final int RUNNING = 2;
     public static final int LOSE = 3;
     
-    
 	private static final int RED_STAR = 1;
 	private static final int YELLOW_STAR =  2;
 	private static final int BLUE_STAR =  3;
 	private static final int GREEN_STAR =  4;
 	private static final int PURPLE_STAR =  5;
-    private long mScore = 0;
+
+    private long mTarget= 1000;
     private long mMoveDelay = 600;
 	
     private int nowblock   ;
-    private int nextblock ;
-    private int nowcol ,nexcol;
+    private int nowcol;
     private int nowx,nowy;
     private long mLastMove;
     
@@ -84,11 +90,22 @@ public class tetrisview extends TileView {
 	    	nowcol = nexcol;
 	    	nowx = 6;
 	    	nowy = 0;
+	    	for(int j=0;j<4;j++){
+	    		boolean ok = true;
+	    		for(int i=0;i<4;i++){
+	    			if(TileStore.store[nowblock][i][j] != 0 ){
+	    				ok = false;
+	    			}
+	    		}
+	    		if(ok) nowy--;
+    			else break;
+	    	}
 	    	nextblock = RNG.nextInt(28);
 	    	nexcol = 1+RNG.nextInt(5);
 	    }
 	    
 	   public  boolean move(int mx,int my){
+		   if(mMode != RUNNING) return false;
 		   int newx = nowx +mx;
 		   int newy = nowy + my;
 		   for(int i=0;i<4;i++){
@@ -118,7 +135,10 @@ public class tetrisview extends TileView {
 				   }
 			   }
 		   }
+		   if(mx != 0) 
+			   tetrisview.this.invalidate();
 		   return isok;
+
 	   }
 	   
 	   public void roll(){
@@ -126,7 +146,7 @@ public class tetrisview extends TileView {
 		   for(int i=0;i<4;i++){
 			   for(int j=0;j<4;j++){
 				   if(TileStore.store[nowblock][i][j] != 0  ){
-					    setTile(0, nowx+i, nowx+j);
+					    setTile(0, nowx+i, nowy+j);
 				   }
 			   }
 		   }
@@ -145,15 +165,29 @@ public class tetrisview extends TileView {
 		   for(int i=0;i<4;i++){
 			   for(int j=0;j<4;j++){
 				   if(TileStore.store[nowblock][i][j] != 0  ){
-					    setTile(nowcol, nowx+i, nowx+j);
+					    setTile(nowcol, nowx+i, nowy+j);
 				   }
 			   }
 		   }
+		   tetrisview.this.invalidate();
 	   }
-	   
+	  /*  @Override
+	  public void onDraw(Canvas canvas){
+	        Bitmap mBackGround2  = ((BitmapDrawable) this.getResources().getDrawable(R.drawable.bg)).getBitmap();
+	        WindowManager wm = (WindowManager) getContext()
+	                .getSystemService(Context.WINDOW_SERVICE);
+	        Paint paint = new Paint();
+	        int w = wm.getDefaultDisplay().getWidth();
+	        int h = wm.getDefaultDisplay().getHeight();
+	        paint.setTextSize(20*(float)h/1600);
+	        canvas.drawText(Long.toString(mScore), 50, 50, paint);
+	   }*/
 
-
-	   
+	   public void quickDrap(){
+		   while(move(0,1)){
+			   tetrisview.this.invalidate();
+		   }
+	   }
 	   public void setMode(int newMode){
 		   int oldMode = mMode;
 		   mMode = newMode;
@@ -183,6 +217,7 @@ public class tetrisview extends TileView {
 	            		 checkmap();
 	            		 newrandomblock();
 	            		 checkIsOver();
+	            		 move(0,0);
 	            	 }
 	                mLastMove = now;
 	            }
@@ -190,6 +225,7 @@ public class tetrisview extends TileView {
 	        }
 	    }
 	    private void checkmap(){
+	    	int hangshu =0;
 	    	for(int i=0;i<mYTileCount;i++){
 	    		boolean ok = true;
 	    		for(int j = 0;j<mXTileCount;j++){
@@ -201,14 +237,34 @@ public class tetrisview extends TileView {
 	    		if(ok){
 	    			for(int j=i;j>0;j--)
 	    				for(int k =0;k<mXTileCount;k++){
-	    					mTileGrid[j][k] = mTileGrid[j-1][k];
+	    					mTileGrid[k][j] = mTileGrid[k][j-1];
 	    				}
 	    			tetrisview.this.invalidate();
+	    			hangshu++;
 	    		}
+	    	}
+	    	if(hangshu  == 1) mScore +=100;
+	    	else if(hangshu == 2)  mScore +=200;
+	    	else if(hangshu == 3)  mScore +=400;
+	    	else if(hangshu == 4)  mScore +=800;
+	    	if(mScore >= mTarget){
+	    		mMoveDelay *= 0.9;
+	    		if(mTarget >= 10000)  mTarget +=10000;
+	    		else                                 mTarget*=2;    
 	    	}
 	    }
 	    private void checkIsOver(){
-	    	if(!move(0,0))
-	    		setMode(LOSE);
+	    	boolean isok = true;
+	    	for(int i=0;i<4;i++){
+				   for(int j=0;j<4;j++){
+					   if(TileStore.store[nowblock][i][j] != 0  ){
+						    if(mTileGrid[nowx+i][nowy+j] != 0) {
+						    	isok = false;
+						    	setMode(LOSE);
+						    	return ;
+						    }
+					   }
+				   }
+			   }
 	    }
 }

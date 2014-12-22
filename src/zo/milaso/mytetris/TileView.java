@@ -21,6 +21,7 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Paint.FontMetricsInt;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -40,14 +41,16 @@ public class TileView extends View {
      * number of tiles that will be drawn.
      */
 
-    protected static int mTileSize;
-
-    protected static int mXTileCount =12;
-    protected static int mYTileCount = 20;
-
+    protected static int mTileSizeX;
+    protected static int mTileSizeY;
+    protected long mScore = 0;
+    protected static int mXTileCount =10;
+    protected static int mYTileCount = 18;
+    protected int nextblock ,nexcol ;
     protected static int mXOffset;
     protected static int mYOffset;
-
+    protected static int tXOffset;
+    protected static int tYOffset;
     private final Paint mPaint = new Paint();
 
     /**
@@ -64,32 +67,27 @@ public class TileView extends View {
 
     public TileView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        WindowManager wm = (WindowManager) getContext()
-                .getSystemService(Context.WINDOW_SERVICE);
-
-        int w = wm.getDefaultDisplay().getWidth();
-        int h = wm.getDefaultDisplay().getHeight();
-        mTileSize = (int)(w/3*2/mXTileCount);
-
-        mXOffset = 0;
-        mYOffset = (h - (mTileSize * mYTileCount) );
-        mTileGrid = new int[mXTileCount][mYTileCount];
+        iniview();
     }
 
     public TileView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        WindowManager wm = (WindowManager) getContext()
-                .getSystemService(Context.WINDOW_SERVICE);
-
-        int w = wm.getDefaultDisplay().getWidth();
-        int h = wm.getDefaultDisplay().getHeight();
-        mTileSize = (int)(w/3*2/mXTileCount);
-
-        mXOffset = 0;
-        mYOffset = 0;
-        mTileGrid = new int[mXTileCount][mYTileCount];
+        iniview();
     }
-
+    private void iniview(){
+	  WindowManager wm = (WindowManager) getContext()
+              .getSystemService(Context.WINDOW_SERVICE);
+	  
+      int w = wm.getDefaultDisplay().getWidth();
+      int h = wm.getDefaultDisplay().getHeight();
+      mTileSizeX = (int)Math.floor((double)w/960*60);
+      mTileSizeY = (int)Math.floor((double)h/1600*60);
+      mXOffset =(int)(63*(double) w/960);
+      mYOffset =(int)( (double)h-(144*(double)h/1600+(double)mTileSizeY*18));
+      tXOffset = (int)(760*(double) w/960);
+      tYOffset =(int)(430*(double) h/1600);;
+      mTileGrid = new int[mXTileCount][mYTileCount];
+}
     /**
      * Resets all tiles to 0 (empty)
      * 
@@ -109,9 +107,9 @@ public class TileView extends View {
      * @param tile
      */
     public void loadTile(int key, Drawable tile) {
-        Bitmap bitmap = Bitmap.createBitmap(mTileSize, mTileSize, Bitmap.Config.ARGB_8888);
+        Bitmap bitmap = Bitmap.createBitmap(mTileSizeX, mTileSizeY, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
-        tile.setBounds(0, 0, mTileSize, mTileSize);
+        tile.setBounds(0, 0, mTileSizeX, mTileSizeY);
         tile.draw(canvas);
 
         mTileArray[key] = bitmap;
@@ -120,22 +118,37 @@ public class TileView extends View {
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        Bitmap mBackGround  = ((BitmapDrawable) this.getResources().getDrawable(R.drawable.background)).getBitmap();
+   //    Bitmap mBackGround1  = ((BitmapDrawable) this.getResources().getDrawable(R.drawable.background)).getBitmap();
+        Bitmap mBackGround2  = ((BitmapDrawable) this.getResources().getDrawable(R.drawable.bg)).getBitmap();
         WindowManager wm = (WindowManager) getContext()
                 .getSystemService(Context.WINDOW_SERVICE);
-
+     
         int w = wm.getDefaultDisplay().getWidth();
         int h = wm.getDefaultDisplay().getHeight();
-        canvas.drawBitmap(mBackGround,null, new Rect(0, 0, w, h),mPaint);
+        //canvas.drawBitmap(mBackGround1,null, new Rect(0, 0, w, h),mPaint);
+        canvas.drawBitmap(mBackGround2,null, new Rect(0, 0, w, h),mPaint);
         for (int x = 0; x < mXTileCount; x += 1) {
             for (int y = 0; y < mYTileCount; y += 1) {
                 if (mTileGrid[x][y] > 0) {
-                    canvas.drawBitmap(mTileArray[mTileGrid[x][y]], mXOffset + x * mTileSize,
-                            mYOffset + y * mTileSize, mPaint);
+                    canvas.drawBitmap(mTileArray[mTileGrid[x][y]], mXOffset + x * mTileSizeX,
+                            mYOffset + y * mTileSizeY, mPaint);
                 }
             }
         }
-
+        for(int i=0;i<4;i++){
+        	for(int j=0;j<4;j++){
+        		if(TileStore.store[nextblock][i][j] !=0){
+        			 canvas.drawBitmap(mTileArray[nexcol], tXOffset + i * mTileSizeX,
+                             tYOffset + j * mTileSizeY, mPaint);
+        		}
+        	}
+        }
+        Rect targetRect = new Rect(0, (int)(180*(float)h/1600), w,    (int)(300*(float)h/1600) );  
+        mPaint.setTextSize(100*(float)h/1600);
+        FontMetricsInt fontMetrics = mPaint.getFontMetricsInt();  
+        int baseline = targetRect.top + (targetRect.bottom - targetRect.top - fontMetrics.bottom + fontMetrics.top) / 2 - fontMetrics.top;  
+        mPaint.setTextAlign(Paint.Align.CENTER);  
+        canvas.drawText(Long.toString(mScore), targetRect.centerX(), baseline, mPaint);  
     }
 
     /**
@@ -163,12 +176,7 @@ public class TileView extends View {
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        mTileSize = (int)(w/3*2/mXTileCount);
-
-        mXOffset = 0;
-        mYOffset = (h - (mTileSize * mYTileCount) );
-        
-        mTileGrid = new int[mXTileCount][mYTileCount];
+       iniview();
         clearTiles();
     }
 
