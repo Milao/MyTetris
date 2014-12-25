@@ -7,5 +7,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
-		
+    <Button 
+          android:id="@+id/pause"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:layout_alignParentTop="true"
+          android:onClick="pause_bt"
+          android:background="@drawable/pause"
+        />
 </merge>

@@ -1,22 +1,84 @@
 package zo.milaso.mytetris;
 
+
+
+import zo.milaso.mytetris.tetrisview.RefreshHandler;
+import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 public class Game extends Activity implements OnGestureListener{
 	
 	private tetrisview mtetrisview;
 	private GestureDetector detector;
+	 private static String ICICLE_KEY = "tetris-view";
 	public void onCreate(Bundle saved){
 		super.onCreate(saved);
 		detector = new GestureDetector(this);
 		setContentView(R.layout.tetris_layout);
 		mtetrisview = (tetrisview)findViewById(R.id.tetris);
+		//mtetrisview.setDependentViews((Button)findViewById(R.id.pause));
 		mtetrisview.ininewgame();
 		mtetrisview.setMode(tetrisview.RUNNING);
+		 if (saved != null) {
+	            Bundle map = saved.getBundle(ICICLE_KEY);
+	            if (map != null) {
+	                mtetrisview.restoreState(map);
+	            }
+		 }
+		 mtetrisview.setMode(tetrisview.RUNNING);
+	}
+	public void onPause(){
+		super.onPause();
+		poppause();
+	}
+	
+	private void poppause(){
+		if(mtetrisview.getGameState() != tetrisview.RUNNING) return ;
+		mtetrisview.setMode(tetrisview.PAUSE);
+		final AlertDialog  builder = new AlertDialog.Builder(Game.this).create();
+		 builder.setCancelable(false);
+       builder.show();
+       Window window = builder.getWindow();
+       window.setContentView(R.layout.pausedialog);
+       ImageButton menu = (ImageButton) window.findViewById(R.id.menu);
+       menu.setOnClickListener(new View.OnClickListener() {
+        public void onClick(View v) {
+        	  Intent intent=new Intent();   
+              intent.setClass(Game.this, MainActivity.class);   
+              startActivity(intent);   
+              Game.this.finish();   
+        }
+       });
+       ImageButton restart =  (ImageButton) window.findViewById(R.id.restart);
+       restart.setOnClickListener(new View.OnClickListener() {
+           public void onClick(View v) {
+           	  	mtetrisview.ininewgame();
+           	  	mtetrisview.setMode(tetrisview.RUNNING);
+           	  	builder.cancel();
+           }
+          });
+       ImageButton keep =  (ImageButton) window.findViewById(R.id.keep);
+       keep.setOnClickListener(new View.OnClickListener() {
+           public void onClick(View v) {
+        	   mtetrisview.setMode(tetrisview.RUNNING);
+        	   builder.cancel();
+           }
+          });
 	}
 	
     @Override
@@ -33,6 +95,7 @@ public class Game extends Activity implements OnGestureListener{
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float arg2,
 			float arg3) {
 		// TODO Auto-generated method stub
+		if(mtetrisview.getGameState() != tetrisview.RUNNING) return false;
 		double dx = e2.getX()-e1.getX();
 		double dy = e2.getY()-e1.getY();
 		if(dy > 120 && dy > dx ){
@@ -68,5 +131,24 @@ public class Game extends Activity implements OnGestureListener{
 		mtetrisview.roll();
 		return false;
 	}
+	public void pause_bt(View view){
+		
+		poppause();
+	}
+	 private RefreshHandler mRedrawHandler = new RefreshHandler();
 
+	    class RefreshHandler extends Handler {
+
+	        @Override
+	        public void handleMessage(Message msg) {
+	        	if(mtetrisview.getGameState() == tetrisview.LOSE){
+	        		
+	        	}
+	        }
+
+	        public void sleep(long delayMillis) {
+	            this.removeMessages(0);
+	            sendMessageDelayed(obtainMessage(0), 200);
+	        }
+	    };
 }
