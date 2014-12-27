@@ -7,6 +7,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
+     <RelativeLayout android:id="@+id/arrowContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="visible">
     <Button 
           android:id="@+id/pause"
           android:layout_width="40dp"
@@ -15,4 +19,15 @@
           android:onClick="pause_bt"
           android:background="@drawable/pause"
         />
+        <Button 
+          android:id="@+id/bon"
+          android:layout_width="60dp"
+          android:layout_height="60dp"
+      	 android:layout_alignParentRight="true"
+         android:layout_centerVertical="true"
+          android:padding="20dp"
+          android:onClick="bon"
+          android:background="@drawable/pause"
+        />
+        </RelativeLayout>
 </merge>

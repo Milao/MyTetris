@@ -31,7 +31,7 @@ public class Game extends Activity implements OnGestureListener{
 		detector = new GestureDetector(this);
 		setContentView(R.layout.tetris_layout);
 		mtetrisview = (tetrisview)findViewById(R.id.tetris);
-		//mtetrisview.setDependentViews((Button)findViewById(R.id.pause));
+		mtetrisview.setDe((Button)findViewById(R.id.bon));
 		mtetrisview.ininewgame();
 		mtetrisview.setMode(tetrisview.RUNNING);
 		 if (saved != null) {
@@ -81,7 +81,9 @@ public class Game extends Activity implements OnGestureListener{
            }
           });
 	}
-	
+	public void bon(View view){
+		mtetrisview.bong();
+	}
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         // TODO Auto-generated method stub

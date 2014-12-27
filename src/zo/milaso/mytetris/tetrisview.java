@@ -35,7 +35,7 @@ public class tetrisview extends TileView {
 	private static final int BLUE_STAR =  3;
 	private static final int GREEN_STAR =  4;
 	private static final int PURPLE_STAR =  5;
-
+	private int allclr =0 ;
     private long mTarget= 1000;
     private long mMoveDelay = 600;
 	
@@ -44,7 +44,7 @@ public class tetrisview extends TileView {
     private int nowx,nowy;
     private long mLastMove;
     
-    private Button pause;
+    private Button mbon;
     
     private static final Random RNG = new Random();
     
@@ -123,8 +123,12 @@ public class tetrisview extends TileView {
 	    	newrandomblock();
 	        mMoveDelay = 600;
 	        mScore = 0;
+	        allclr = 0;
+	        mbon.setVisibility(Button.GONE);
 	    }
-	    
+	    public void setDe(Button bon){
+	    	mbon = bon;
+	    }
 	    private void newrandomblock( ){
 	    	nowblock = nextblock;
 	    	nowcol = nexcol;
@@ -140,8 +144,8 @@ public class tetrisview extends TileView {
 	    		if(ok) nowy++;
     			else break;
 	    	}
-	    	nextblock = RNG.nextInt(28);
-	    	nexcol = 1+RNG.nextInt(5);
+	    	nextblock = RNG.nextInt(124142)%28;
+	    	nexcol = 1+RNG.nextInt(1000)%5;
 	    }
 	    
 	   public  boolean move(int mx,int my){
@@ -218,6 +222,30 @@ public class tetrisview extends TileView {
 			   tetrisview.this.invalidate();
 		   }
 	   }
+	   public void bong(){
+		   setMode(PAUSE);
+		   quickDrap();
+		   for(int i =0;i<mXTileCount;i++){
+			   for(int j=mYTileCount-1;j>=0;j--){
+				   if(mTileGrid[i][j+4] != 0) {
+					   int co =   mTileGrid[i][j+4] ;
+					   mTileGrid[i][j+4] = 0;
+					   int now = j+4;
+					   while(now+1 < mYTileCount+4 && mTileGrid[i][now+1] == 0) now++;
+					   mTileGrid[i][now] = co;
+				   }
+			   }
+			   tetrisview.this.invalidate();
+		   }
+		   
+		   checkmap();
+		   allclr =0 ;
+		   newrandomblock();
+		   mbon.setVisibility(Button.GONE);
+		   setMode(RUNNING);
+		   
+	   }
+	   
 	   public void setMode(int newMode){
 		   int oldMode = mMode;
 		   mMode = newMode;
@@ -227,7 +255,6 @@ public class tetrisview extends TileView {
 	            return;
 	        }
 
-	        Resources res = getContext().getResources();
 	        if (newMode == PAUSE) {
 	        }
 	        if (newMode == READY) {
@@ -273,6 +300,9 @@ public class tetrisview extends TileView {
 	    			hangshu++;
 	    		}
 	    	}
+	    	if(hangshu > 4) hangshu = 4;
+	    	allclr += hangshu;
+	    	if(allclr >= 1 ) mbon.setVisibility(Button.VISIBLE);
 	    	mScore +=(long) Math.pow(2, hangshu-1) * 100;
 	    	if(mScore >= mTarget){
 	    		mMoveDelay *= 0.9;
