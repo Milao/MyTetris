@@ -213,6 +213,7 @@ public class tetrisview extends TileView {
 	   }
 
 	   public void quickDrap(){
+		   if(mMode != RUNNING)  return ;
 		   while(move(0,1)){
 			   tetrisview.this.invalidate();
 		   }
@@ -246,7 +247,7 @@ public class tetrisview extends TileView {
 	            		 checkmap();
 	            		 newrandomblock();
 	            		 checkIsOver();
-	            		 move(0,0);
+	            		 move(0,1);
 	            	 }
 	                mLastMove = now;
 	            }

@@ -7,9 +7,9 @@
     android:layout_width="300dp"
     android:layout_height="400dp"
     android:layout_alignParentTop="true"
-    android:src="@drawable/pausebac" />
+    android:src="@drawable/gameover" />
   <ImageButton
-     android:id="@+id/keep"
+     android:id="@+id/menu"
      android:layout_alignTop="@id/gameoverBackground"
      android:layout_width="100dp"
      android:layout_height="50dp"
@@ -17,7 +17,7 @@
      android:layout_centerHorizontal="true"
      android:layout_marginTop="160dp"
      
-     android:background="@drawable/keepgoing" />
+     android:background="@drawable/menu" />
 <ImageButton
      android:id="@+id/restart"
      android:layout_alignTop="@id/gameoverBackground"

@@ -41,6 +41,7 @@ public class Game extends Activity implements OnGestureListener{
 	            }
 		 }
 		 mtetrisview.setMode(tetrisview.RUNNING);
+		mRedrawHandler.sleep();
 	}
 	public void onPause(){
 		super.onPause();
@@ -98,7 +99,7 @@ public class Game extends Activity implements OnGestureListener{
 		if(mtetrisview.getGameState() != tetrisview.RUNNING) return false;
 		double dx = e2.getX()-e1.getX();
 		double dy = e2.getY()-e1.getY();
-		if(dy > 120 && dy > dx ){
+		if(dy > 180 && dy > dx ){
 			mtetrisview.quickDrap();
 		}
 		else if(dx > 120){
@@ -142,13 +143,36 @@ public class Game extends Activity implements OnGestureListener{
 	        @Override
 	        public void handleMessage(Message msg) {
 	        	if(mtetrisview.getGameState() == tetrisview.LOSE){
-	        		
+	        		final AlertDialog  builder = new AlertDialog.Builder(Game.this).create();
+	       		 	builder.setCancelable(false);
+	       		 	builder.show();
+	       		 	Window window = builder.getWindow();
+	       		 	window.setContentView(R.layout.gameoverdialog);
+	              ImageButton menu = (ImageButton) window.findViewById(R.id.menu);
+	              menu.setOnClickListener(new View.OnClickListener() {
+	               public void onClick(View v) {
+	               	  Intent intent=new Intent();   
+	                     intent.setClass(Game.this, MainActivity.class);   
+	                     startActivity(intent);   
+	                     Game.this.finish();   
+	               }
+	              });
+	              ImageButton restart =  (ImageButton) window.findViewById(R.id.restart);
+	              restart.setOnClickListener(new View.OnClickListener() {
+	                  public void onClick(View v) {
+	                  	  	mtetrisview.ininewgame();
+	                  	  	mtetrisview.setMode(tetrisview.RUNNING);
+	                  	  mRedrawHandler.sleep();
+	                  	  	builder.cancel();
+	                  }
+	                 });
 	        	}
+	        	if(mtetrisview.getGameState()  != tetrisview.LOSE ) mRedrawHandler.sleep();
 	        }
 
-	        public void sleep(long delayMillis) {
-	            this.removeMessages(0);
-	            sendMessageDelayed(obtainMessage(0), 200);
+	        public void sleep() {
+	            this.removeMessages(10);
+	            sendMessageDelayed(obtainMessage(10), 100);
 	        }
 	    };
 }

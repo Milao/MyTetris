@@ -2,7 +2,9 @@ package zo.milaso.mytetris;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.Button;
@@ -18,7 +20,11 @@ public class MainActivity extends Activity {
 		bnt_rank = (Button) findViewById(R.id.rank);
 		bnt_help = (Button)findViewById(R.id.help);
 		bnt_set = (Button)findViewById(R.id.setting);
+		  WindowManager wm =  getWindowManager();
+	      int w = wm.getDefaultDisplay().getWidth();
+	      int h = wm.getDefaultDisplay().getHeight();
 	}
+	
 	public void setting_btn(View view){
 		Intent intent = new Intent(MainActivity.this,setting.class);
 		startActivity(intent);
